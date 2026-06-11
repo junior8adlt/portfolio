@@ -31,13 +31,14 @@ const nextConfig: NextConfig = {
   async rewrites() {
     // English lives unprefixed (URLs stay stable); Spanish under /es.
     return [
-      { source: "/", destination: "/en" },
       {
-        // Root RSC payload: `/` normalizes to `/index.rsc`, whose real file is `/en.rsc`
-        // (NOT `/en/index.rsc`, which the generic rule below would produce).
-        source: "/index.rsc",
+        // Root RSC payload: Vercel normalizes the path back to `/` before user
+        // rewrites run, so route by the RSC header straight to the flight file.
+        source: "/",
+        has: [{ type: "header", key: "rsc" }],
         destination: "/en.rsc",
       },
+      { source: "/", destination: "/en" },
       {
         // RSC payloads: on Vercel, client navigations request `<path>.rsc`,
         // which the dot-exclusion below would otherwise skip (-> 404, breaking
