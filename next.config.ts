@@ -33,6 +33,12 @@ const nextConfig: NextConfig = {
     return [
       { source: "/", destination: "/en" },
       {
+        // Root RSC payload: `/` normalizes to `/index.rsc`, whose real file is `/en.rsc`
+        // (NOT `/en/index.rsc`, which the generic rule below would produce).
+        source: "/index.rsc",
+        destination: "/en.rsc",
+      },
+      {
         // RSC payloads: on Vercel, client navigations request `<path>.rsc`,
         // which the dot-exclusion below would otherwise skip (-> 404, breaking
         // SPA navigation and view transitions in production).
