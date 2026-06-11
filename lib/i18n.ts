@@ -215,7 +215,7 @@ const en: Dict = {
     intro:
       "Investigations written the way they happened: symptom, evidence, refuted hypotheses, root cause. No tutorials, no listicles — autopsies.",
     entriesLabel: (n) => `${n} ${n === 1 ? "entry" : "entries"} on file`,
-    minRead: "min",
+    minRead: "min read",
     back: "← all field notes",
     metaTitle: "Blog — field notes",
     metaDescription:
@@ -322,7 +322,7 @@ const es: Dict = {
     intro:
       "Investigaciones escritas como sucedieron: síntoma, evidencia, hipótesis refutadas, causa raíz. Sin tutoriales, sin listicles — autopsias.",
     entriesLabel: (n) => `${n} ${n === 1 ? "entrada" : "entradas"} en archivo`,
-    minRead: "min",
+    minRead: "min de lectura",
     back: "← todas las notas de campo",
     metaTitle: "Blog — notas de campo",
     metaDescription:
