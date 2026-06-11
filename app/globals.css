@@ -136,26 +136,49 @@ body {
   to { transform: translateX(110%); }
 }
 
-/* ---- view transitions ---- */
-@view-transition {
-  navigation: auto;
+/* ---- view transitions (React <ViewTransition>, SPA navigations) ---- */
+
+/* header stays anchored while content transitions */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
 }
 
-::view-transition-old(root) {
-  animation: vt-out 0.18s ease-in forwards;
+/* page content: old leaves fast, new arrives gently */
+::view-transition-old(.page-exit) {
+  animation: 0.14s ease-in both vt-fade reverse;
+}
+::view-transition-new(.page-enter) {
+  animation:
+    0.24s var(--ease-out-quart) 0.1s both vt-fade,
+    0.32s var(--ease-out-quart) both vt-rise;
 }
 
-::view-transition-new(root) {
-  animation: vt-in 0.28s var(--ease-out-quart) forwards;
+@keyframes vt-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes vt-out {
-  to { opacity: 0; }
+@keyframes vt-rise {
+  from { transform: translateY(8px); }
+  to { transform: translateY(0); }
 }
 
-@keyframes vt-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+/* shared-element morph (ledger title -> case file title) */
+::view-transition-group(.morph) {
+  animation-duration: 320ms;
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-morph-blur;
+}
+@keyframes vt-morph-blur {
+  30% { filter: blur(2px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -168,9 +191,11 @@ body {
   .sweep:hover::after {
     animation: none;
   }
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none;
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
   }
   *,
   *::before,

@@ -1,11 +1,13 @@
 import { SITE } from "@/lib/site";
+import { t, type Lang } from "@/lib/i18n";
 
-export function Footer() {
+export function Footer({ lang }: { lang: Lang }) {
+  const ui = t(lang);
   return (
     <footer className="mt-24 border-t border-ink-line">
       <div className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-6 font-mono text-xs text-paper-dim sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>
-          <span className="text-phosphor" aria-hidden="true">●</span> session active ·{" "}
+          <span className="text-phosphor" aria-hidden="true">●</span> {ui.footer.session} ·{" "}
           {SITE.location}
         </p>
         <nav aria-label="Contact" className="flex flex-wrap gap-4">

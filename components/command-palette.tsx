@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SITE } from "@/lib/site";
+import { href, t, type Lang } from "@/lib/i18n";
 
 interface Command {
   id: string;
@@ -11,28 +12,33 @@ interface Command {
   action: () => void;
 }
 
-export function CommandPalette() {
+export function CommandPalette({ lang }: { lang: Lang }) {
   const router = useRouter();
+  const pathname = usePathname() ?? "/";
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const ui = t(lang);
 
-  const commands = useMemo<Command[]>(
-    () => [
-      { id: "home", label: "go: home", hint: "/", action: () => router.push("/") },
-      { id: "work", label: "go: work — case files", hint: "/work", action: () => router.push("/work") },
-      { id: "lab", label: "go: lab — experiments", hint: "/lab", action: () => router.push("/lab") },
-      { id: "about", label: "go: about — profile + timeline", hint: "/about", action: () => router.push("/about") },
-      { id: "blog", label: "go: blog — field notes", hint: "/blog", action: () => router.push("/blog") },
-      { id: "cvpdf", label: "download: cv.pdf", hint: "/cv.pdf", action: () => window.open("/cv.pdf", "_blank", "noopener") },
-      { id: "email", label: "contact: email", hint: SITE.email, action: () => { window.location.href = `mailto:${SITE.email}`; } },
-      { id: "linkedin", label: "open: linkedin", hint: "external", action: () => window.open(SITE.linkedin, "_blank", "noopener") },
-      { id: "github", label: "open: github", hint: "external", action: () => window.open(SITE.github, "_blank", "noopener") },
-      { id: "cv", label: "read: cv.json — machine-readable", hint: "/api/cv", action: () => router.push("/api/cv") },
-    ],
-    [router],
-  );
+  const commands = useMemo<Command[]>(() => {
+    const basePath = lang === "es" ? pathname.replace(/^\/es(?=\/|$)/, "") || "/" : pathname;
+    const other: Lang = lang === "en" ? "es" : "en";
+    const cvFile = lang === "es" ? "/cv-es.pdf" : "/cv.pdf";
+    return [
+      { id: "home", label: ui.palette.home, hint: href(lang, "/"), action: () => router.push(href(lang, "/")) },
+      { id: "work", label: ui.palette.work, hint: href(lang, "/work"), action: () => router.push(href(lang, "/work")) },
+      { id: "lab", label: ui.palette.lab, hint: href(lang, "/lab"), action: () => router.push(href(lang, "/lab")) },
+      { id: "blog", label: ui.palette.blog, hint: href(lang, "/blog"), action: () => router.push(href(lang, "/blog")) },
+      { id: "about", label: ui.palette.about, hint: href(lang, "/about"), action: () => router.push(href(lang, "/about")) },
+      { id: "lang", label: ui.palette.switchLang, hint: href(other, basePath), action: () => router.push(href(other, basePath)) },
+      { id: "email", label: ui.palette.email, hint: SITE.email, action: () => { window.location.href = `mailto:${SITE.email}`; } },
+      { id: "linkedin", label: ui.palette.linkedin, hint: "external", action: () => window.open(SITE.linkedin, "_blank", "noopener") },
+      { id: "github", label: ui.palette.github, hint: "external", action: () => window.open(SITE.github, "_blank", "noopener") },
+      { id: "cv", label: ui.palette.cvJson, hint: "/api/cv", action: () => router.push("/api/cv") },
+      { id: "cvpdf", label: ui.palette.cvPdf, hint: cvFile, action: () => window.open(cvFile, "_blank", "noopener") },
+    ];
+  }, [router, lang, pathname, ui]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -72,10 +78,11 @@ export function CommandPalette() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="cursor-pointer border border-ink-line px-2 py-1 font-mono text-xs text-paper-dim transition-colors duration-150 hover:border-phosphor-dim hover:text-phosphor"
-        aria-label="Open command palette"
+        className="cursor-pointer border border-ink-line px-2.5 py-2 font-mono text-xs text-paper-dim transition-colors duration-150 hover:border-phosphor-dim hover:text-phosphor sm:py-1"
+        aria-label={ui.a11y.openPalette}
       >
-        ⌘K
+        <span className="hidden sm:inline">⌘K</span>
+        <span aria-hidden="true" className="sm:hidden">❯_</span>
       </button>
 
       {open && (
@@ -113,7 +120,7 @@ export function CommandPalette() {
                   }
                   if (e.key === "Enter" && filtered[active]) run(filtered[active]);
                 }}
-                placeholder="type a command…"
+                placeholder={ui.palette.placeholder}
                 className="w-full bg-transparent font-mono text-sm text-paper placeholder:text-paper-dim/50 focus:outline-none"
                 aria-label="Search commands"
               />
@@ -122,7 +129,7 @@ export function CommandPalette() {
             <ul className="max-h-72 overflow-y-auto py-1" role="listbox" aria-label="Commands">
               {filtered.length === 0 && (
                 <li className="px-4 py-3 font-mono text-xs text-paper-dim">
-                  command not found: {query}
+                  {ui.palette.notFound} {query}
                 </li>
               )}
               {filtered.map((cmd, i) => (

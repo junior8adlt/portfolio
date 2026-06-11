@@ -1,48 +1,54 @@
 import type { Metadata } from "next";
 import { SectionRule } from "@/components/section-rule";
-import { experience } from "@/content/experience";
+import { getExperience } from "@/content/experience";
 import { SITE } from "@/lib/site";
+import { isLang, langAlternates, t, type Lang } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "About — profile and timeline",
-  description:
-    "Senior full-stack engineer, 8+ years: .NET, React, SQL, NestJS — legacy modernization and AI tooling for US clients.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLang(lang)) return {};
+  const ui = t(lang);
+  return {
+    title: ui.about.metaTitle,
+    description: ui.about.metaDescription,
+    alternates: langAlternates(lang, "/about"),
+  };
+}
 
-export default function AboutPage() {
+export default async function AboutPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang = raw as Lang;
+  if (!isLang(lang)) return null;
+  const ui = t(lang);
+  const experience = getExperience(lang);
+  const cvFile = lang === "es" ? "/cv-es.pdf" : "/cv.pdf";
+
   return (
     <div className="pt-12 pb-8 sm:pt-16">
       <p className="font-mono text-xs text-paper-dim">
-        <span className="text-phosphor-dim">❯</span> whoami --verbose
+        <span className="text-phosphor-dim">❯</span> {ui.about.cmd}
       </p>
       <h1 className="mt-4 font-mono text-3xl font-semibold tracking-tight text-paper sm:text-4xl">
         Alberto Ochoa
       </h1>
-      <p className="mt-2 font-mono text-sm text-phosphor">senior software engineer · {SITE.location}</p>
+      <p className="mt-2 font-mono text-sm text-phosphor">
+        {ui.about.role} · {SITE.location}
+      </p>
 
       <div className="mt-8 max-w-[64ch] space-y-5 font-serif text-lg leading-[1.65] text-paper">
-        <p>
-          I&apos;ve spent 8+ years shipping enterprise software across the full stack: SQL design
-          and query optimization, .NET and Node APIs, React frontends. My specialty is the work
-          most engineers avoid: taking undocumented legacy behavior, reverse-engineering it, and
-          delivering a modern replacement that doesn&apos;t regress the business.
-        </p>
-        <p>
-          The second pillar is AI tooling that earns its keep in production: custom MCP servers
-          that automate release paperwork and ticket extraction, a forensic investigation
-          methodology for production incidents, and agent experiments that stress-test what this
-          tech can actually do.
-        </p>
-        <p>
-          Computer Systems Engineering, Instituto Tecnológico Superior de Chapala. English fluent,
-          Spanish native. I work daily with US teams.
-        </p>
+        {ui.about.paragraphs.map((p, i) => (
+          <p key={i}>{p}</p>
+        ))}
       </div>
 
       <section className="mt-16" aria-labelledby="timeline">
-        <SectionRule label="timeline · git log --career" />
+        <SectionRule label={ui.about.timelineLabel} />
         <h2 id="timeline" className="sr-only">
-          Experience
+          Timeline
         </h2>
         <ol className="mt-8 space-y-12">
           {experience.map((job) => (
@@ -72,12 +78,12 @@ export default function AboutPage() {
       </section>
 
       <section className="mt-16" aria-labelledby="contact">
-        <SectionRule label="open channel" />
+        <SectionRule label={ui.about.contactLabel} />
         <h2 id="contact" className="sr-only">
-          Contact
+          {ui.about.contactLabel}
         </h2>
         <p className="mt-6 max-w-[58ch] font-serif text-lg leading-relaxed text-paper-dim">
-          Open to senior full-stack roles and consulting with US teams.
+          {ui.about.contactText}
         </p>
         <div className="mt-6 flex flex-wrap gap-4">
           <a
@@ -95,12 +101,12 @@ export default function AboutPage() {
             linkedin ↗
           </a>
           <a
-            href="/cv.pdf"
+            href={cvFile}
             target="_blank"
             rel="noopener"
             className="border border-ink-line px-5 py-2.5 font-mono text-sm text-paper-dim transition-colors duration-150 hover:border-phosphor-dim hover:text-phosphor"
           >
-            cv.pdf ↓
+            {ui.about.cvPdf}
           </a>
         </div>
       </section>

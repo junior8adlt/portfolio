@@ -15,8 +15,29 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
+  },
+  async redirects() {
+    // English is canonical at the root; /en/* would be duplicate content.
+    return [
+      { source: "/en", destination: "/", permanent: true },
+      { source: "/en/:path*", destination: "/:path*", permanent: true },
+    ];
+  },
+  async rewrites() {
+    // English lives unprefixed (URLs stay stable); Spanish under /es.
+    return [
+      { source: "/", destination: "/en" },
+      {
+        source:
+          "/:path((?!es$|es/|api/|_next/|_vercel/|opengraph-image|llms\\.txt|.*\\..*).*)",
+        destination: "/en/:path",
+      },
+    ];
   },
 };
 

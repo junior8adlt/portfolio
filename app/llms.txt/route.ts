@@ -21,7 +21,8 @@ servers and AI tooling professionally.
 - Contact: ${SITE.email}
 - Structured CV (JSON Resume schema): ${SITE.url}/api/cv
 - Full case studies (JSON): ${SITE.url}/api/work
-- CV as PDF: ${SITE.url}/cv.pdf
+- CV as PDF: ${SITE.url}/cv.pdf (English) · ${SITE.url}/cv-es.pdf (Spanish)
+- Site languages: English at ${SITE.url}/ (canonical), Spanish at ${SITE.url}/es/ — same content, same slugs
 - MCP server: \`npx -y alberto-mcp\` (tools: get_profile, list_case_studies, get_case_study, search_experience, get_contact)
 
 ## Case studies

@@ -22,6 +22,7 @@ export interface CaseStudy {
   stamps: Stamp[];
   stack: string[];
   period: string; // "2024 — present"
+  url?: string; // live site, omitted when private or in progress
   keyMetric: string; // single strongest number for the ledger row
   /** forensic sections */
   situation: string;

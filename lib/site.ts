@@ -6,7 +6,7 @@ export const SITE = {
   description:
     "Senior full-stack engineer (8+ years). I take legacy systems nobody understands and modernize them without regressions — .NET, React, SQL — and I build MCP servers and AI agents that do real production work.",
   email: "ing.albertoochoadelatorre@gmail.com",
-  location: "Jalisco, México (UTC-6) · working with US teams",
+  location: "Jalisco, México (UTC-6)",
   linkedin: "https://www.linkedin.com/in/alberto-ochoa-de-la-torre-340410171/",
   github: "https://github.com/junior8adlt",
   keywords: [

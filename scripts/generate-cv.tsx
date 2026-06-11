@@ -6,7 +6,50 @@
 import path from "node:path";
 import { Document, Page, Text, View, StyleSheet, renderToFile } from "@react-pdf/renderer";
 import { SITE } from "../lib/site";
-import { experience, skills } from "../content/experience";
+import { getExperience, skills } from "../content/experience";
+import type { Lang } from "../lib/i18n";
+
+const labels: Record<Lang, {
+  role: string;
+  profileTitle: string;
+  profile: string;
+  experience: string;
+  skills: string;
+  education: string;
+  educationLine: string;
+  languages: string;
+  footer: (site: string) => string;
+  docSubject: string;
+}> = {
+  en: {
+    role: "Senior Software Engineer · legacy modernization + AI tooling",
+    profileTitle: "Profile",
+    profile:
+      "Full-stack software engineer with 8+ years delivering enterprise web applications across frontend, backend and data layers. Recent focus: legacy modernization (WinForms + stored procedures to .NET Web APIs + React) for a US logistics client, combined with production AI tooling — custom MCP servers, agent integrations and a forensic incident-investigation methodology. Known for reverse-engineering undocumented legacy behavior and shipping modern replacements without regressions.",
+    experience: "Experience",
+    skills: "Skills",
+    education: "Education & Languages",
+    educationLine: "Computer Systems Engineering — Instituto Tecnológico Superior de Chapala, México",
+    languages: "English: fluent · Spanish: native",
+    footer: (site) =>
+      `Generated from the same dataset that powers ${site} — machine-readable version at ${site}/api/cv`,
+    docSubject: "Curriculum Vitae",
+  },
+  es: {
+    role: "Ingeniero de Software Senior · modernización legacy + AI tooling",
+    profileTitle: "Perfil",
+    profile:
+      "Ingeniero de software full-stack con 8+ años entregando aplicaciones web enterprise en frontend, backend y capa de datos. Enfoque reciente: modernización legacy (WinForms + stored procedures a .NET Web APIs + React) para un cliente logístico de EE.UU., combinado con tooling de IA en producción — servidores MCP a la medida, integraciones de agentes y una metodología forense de investigación de incidentes. Conocido por hacer ingeniería inversa de comportamiento legacy sin documentar y entregar reemplazos modernos sin regresiones.",
+    experience: "Experiencia",
+    skills: "Habilidades",
+    education: "Educación e Idiomas",
+    educationLine: "Ingeniería en Sistemas Computacionales — Instituto Tecnológico Superior de Chapala, México",
+    languages: "Inglés: fluido · Español: nativo",
+    footer: (site) =>
+      `Generado del mismo dataset que alimenta ${site} — versión legible por máquinas en ${site}/api/cv`,
+    docSubject: "Currículum Vitae",
+  },
+};
 
 /** standard PDF fonts lack arrows/triangles — swap for ASCII */
 function ascii(text: string): string {
@@ -55,38 +98,33 @@ const s = StyleSheet.create({
   skillList: { flex: 1, fontSize: 9 },
 });
 
-function CV() {
+function CV({ lang }: { lang: Lang }) {
+  const L = labels[lang];
+  const experience = getExperience(lang);
   return (
     <Document
       title={`${SITE.name} — Senior Software Engineer`}
       author={SITE.name}
-      subject="Curriculum Vitae"
+      subject={L.docSubject}
       keywords={SITE.keywords.join(", ")}
     >
       <Page size="LETTER" style={s.page}>
         {/* header */}
         <Text style={s.name}>{SITE.name}</Text>
-        <Text style={s.role}>Senior Software Engineer · legacy modernization + AI tooling</Text>
+        <Text style={s.role}>{L.role}</Text>
         <Text style={s.contact}>
           {SITE.email}  ·  {SITE.url.replace("https://", "")}  ·  {SITE.linkedin.replace("https://www.", "")}  ·  {SITE.location}
         </Text>
 
         {/* profile */}
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Profile</Text>
-          <Text>
-            Full-stack software engineer with 8+ years delivering enterprise web applications
-            across frontend, backend and data layers. Recent focus: legacy modernization
-            (WinForms + stored procedures to .NET Web APIs + React) for a US logistics client,
-            combined with production AI tooling — custom MCP servers, agent integrations and a
-            forensic incident-investigation methodology. Known for reverse-engineering
-            undocumented legacy behavior and shipping modern replacements without regressions.
-          </Text>
+          <Text style={s.sectionTitle}>{L.profileTitle}</Text>
+          <Text>{L.profile}</Text>
         </View>
 
         {/* experience */}
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Experience</Text>
+          <Text style={s.sectionTitle}>{L.experience}</Text>
           {experience.map((job) => (
             <View key={`${job.company}-${job.period}`} wrap={false}>
               <View style={s.jobHeader}>
@@ -108,7 +146,7 @@ function CV() {
 
         {/* skills */}
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Skills</Text>
+          <Text style={s.sectionTitle}>{L.skills}</Text>
           {(
             [
               ["backend", skills.backend],
@@ -126,16 +164,14 @@ function CV() {
 
         {/* education + languages */}
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Education & Languages</Text>
-          <Text>
-            Computer Systems Engineering — Instituto Tecnológico Superior de Chapala, México
-          </Text>
-          <Text style={{ marginTop: 2 }}>English: fluent · Spanish: native</Text>
+          <Text style={s.sectionTitle}>{L.education}</Text>
+          <Text>{L.educationLine}</Text>
+          <Text style={{ marginTop: 2 }}>{L.languages}</Text>
         </View>
 
         {/* footer note */}
         <Text style={{ marginTop: 18, fontSize: 7.5, color: dim, fontFamily: "Courier" }}>
-          Generated from the same dataset that powers {SITE.url.replace("https://", "")} — machine-readable version at {SITE.url.replace("https://", "")}/api/cv
+          {L.footer(SITE.url.replace("https://", ""))}
         </Text>
       </Page>
     </Document>
@@ -143,9 +179,15 @@ function CV() {
 }
 
 async function main() {
-  const out = path.join(process.cwd(), "public", "cv.pdf");
-  await renderToFile(<CV />, out);
-  console.log(`cv.pdf written to ${out}`);
+  const targets: Array<[Lang, string]> = [
+    ["en", "cv.pdf"],
+    ["es", "cv-es.pdf"],
+  ];
+  for (const [lang, file] of targets) {
+    const out = path.join(process.cwd(), "public", file);
+    await renderToFile(<CV lang={lang} />, out);
+    console.log(`${file} written to ${out}`);
+  }
 }
 
 main().catch((err) => {

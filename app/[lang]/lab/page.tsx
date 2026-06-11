@@ -1,32 +1,47 @@
 import type { Metadata } from "next";
 import { SectionRule } from "@/components/section-rule";
 import { Stamp } from "@/components/stamp";
-import { lab } from "@/content/lab";
+import { getLab } from "@/content/lab";
+import { isLang, langAlternates, t, type Lang } from "@/lib/i18n";
 
-export const metadata: Metadata = {
-  title: "Lab — experiments",
-  description:
-    "Running experiments: AI game agents, in-game coaching overlays, MCP servers for memory and release automation.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  if (!isLang(lang)) return {};
+  const ui = t(lang);
+  return {
+    title: ui.lab.metaTitle,
+    description: ui.lab.metaDescription,
+    alternates: langAlternates(lang, "/lab"),
+  };
+}
 
-export default function LabPage() {
+export default async function LabPage({ params }: { params: Promise<{ lang: string }> }) {
+  const { lang: raw } = await params;
+  const lang = raw as Lang;
+  if (!isLang(lang)) return null;
+  const ui = t(lang);
+  const lab = getLab(lang);
+
   return (
     <div className="pt-12 pb-8 sm:pt-16">
       <p className="font-mono text-xs text-paper-dim">
-        <span className="text-phosphor-dim">❯</span> ps aux | grep experiments
+        <span className="text-phosphor-dim">❯</span> {ui.lab.cmd}
       </p>
       <h1 className="mt-4 font-mono text-3xl font-semibold tracking-tight text-paper sm:text-4xl">
-        Lab
+        {ui.lab.title}
       </h1>
       <p className="mt-4 max-w-[58ch] font-serif text-lg leading-relaxed text-paper-dim">
-        Where I stress-test ideas before they earn a place in production: agents, MCP servers,
-        real-time overlays. Some are toys. The toys are the point.
+        {ui.lab.intro}
       </p>
 
       <div className="mt-12 space-y-14">
         {lab.map((entry) => (
           <section key={entry.slug} aria-labelledby={`lab-${entry.slug}`}>
-            <SectionRule label={`process ${entry.index}`} tone="amber" />
+            <SectionRule label={`${ui.lab.process} ${entry.index}`} tone="amber" />
             <div className="mt-5 flex flex-wrap items-center gap-3">
               <h2
                 id={`lab-${entry.slug}`}
@@ -44,12 +59,12 @@ export default function LabPage() {
             </p>
             <p className="mt-4 max-w-[64ch] border border-ink-line bg-ink-raise px-4 py-3 font-serif text-[15px] leading-relaxed text-paper-dim">
               <span className="mr-2 font-mono text-[10px] uppercase tracking-[0.2em] text-phosphor">
-                highlight
+                {ui.lab.highlight}
               </span>
               {entry.highlight}
             </p>
             <p className="mt-4 font-mono text-xs text-paper-dim">
-              stack: <span className="text-paper">{entry.stack.join(" · ")}</span>
+              {ui.lab.stack}: <span className="text-paper">{entry.stack.join(" · ")}</span>
             </p>
           </section>
         ))}

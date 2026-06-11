@@ -1,30 +1,33 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { posts, getPost } from "@/content/blog";
+import { getPosts, getPost } from "@/content/blog";
 import { SITE } from "@/lib/site";
+import { absUrl, href, isLang, langAlternates, LANGS, t, type Lang } from "@/lib/i18n";
 
 export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.meta.slug }));
+  return LANGS.flatMap((lang) => getPosts(lang).map((p) => ({ lang, slug: p.meta.slug })));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getPost(slug);
+  const { lang, slug } = await params;
+  if (!isLang(lang)) return {};
+  const post = getPost(lang, slug);
   if (!post) return {};
   return {
     title: post.meta.title,
     description: post.meta.summary,
+    alternates: langAlternates(lang, `/blog/${slug}`),
     openGraph: {
       type: "article",
       title: post.meta.title,
       description: post.meta.summary,
       publishedTime: post.meta.date,
-      url: `${SITE.url}/blog/${post.meta.slug}`,
+      url: absUrl(lang, `/blog/${post.meta.slug}`),
     },
   };
 }
@@ -32,10 +35,13 @@ export async function generateMetadata({
 export default async function BlogPostPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }) {
-  const { slug } = await params;
-  const post = getPost(slug);
+  const { lang: raw, slug } = await params;
+  const lang = raw as Lang;
+  if (!isLang(lang)) notFound();
+  const ui = t(lang);
+  const post = getPost(lang, slug);
   if (!post) notFound();
 
   const { meta, Component } = post;
@@ -46,7 +52,8 @@ export default async function BlogPostPage({
     headline: meta.title,
     description: meta.summary,
     datePublished: meta.date,
-    url: `${SITE.url}/blog/${meta.slug}`,
+    inLanguage: lang === "en" ? "en-US" : "es-MX",
+    url: absUrl(lang, `/blog/${meta.slug}`),
     author: { "@type": "Person", name: SITE.name, url: SITE.url },
     keywords: meta.tags.join(", "),
   };
@@ -62,7 +69,7 @@ export default async function BlogPostPage({
           <span className="text-phosphor-dim">❯</span> cat /blog/{meta.slug}.md
         </p>
         <p className="mt-6 font-mono text-xs text-paper-dim">
-          <time dateTime={meta.date}>{meta.date}</time> · {meta.readingMin} min ·{" "}
+          <time dateTime={meta.date}>{meta.date}</time> · {meta.readingMin} {ui.blog.minRead} ·{" "}
           {meta.tags.join(" · ")}
         </p>
         <h1 className="mt-3 max-w-[26ch] font-mono text-3xl font-semibold leading-tight tracking-tight text-paper sm:text-4xl">
@@ -77,12 +84,12 @@ export default async function BlogPostPage({
         <Component />
       </div>
 
-      <nav className="mt-20 border-t border-ink-line pt-6" aria-label="Back to blog">
+      <nav className="mt-20 border-t border-ink-line pt-6" aria-label={ui.blog.back}>
         <Link
-          href="/blog"
+          href={href(lang, "/blog")}
           className="py-2 font-mono text-sm text-paper-dim transition-colors duration-150 hover:text-phosphor"
         >
-          ← all field notes
+          {ui.blog.back}
         </Link>
       </nav>
     </article>

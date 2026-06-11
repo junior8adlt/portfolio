@@ -1,5 +1,9 @@
 import type { ComponentType } from "react";
-import PhantomBuildFailure, { meta as phantomMeta } from "./phantom-build-failure";
+import type { Lang } from "@/lib/i18n";
+import ForensicMethodEn, { meta as forensicEn } from "./forensic-method.en";
+import ForensicMethodEs, { meta as forensicEs } from "./forensic-method.es";
+import PhantomEn, { meta as phantomEn } from "./phantom-build-failure.en";
+import PhantomEs, { meta as phantomEs } from "./phantom-build-failure.es";
 
 export interface PostMeta {
   slug: string;
@@ -15,9 +19,25 @@ export interface Post {
   Component: ComponentType;
 }
 
-/** newest first */
-export const posts: Post[] = [{ meta: phantomMeta, Component: PhantomBuildFailure }];
+/** newest first; slugs are shared across languages so hreflang alternates line up */
+const byLang: Record<Lang, Post[]> = {
+  en: [
+    { meta: forensicEn, Component: ForensicMethodEn },
+    { meta: phantomEn, Component: PhantomEn },
+  ],
+  es: [
+    { meta: forensicEs, Component: ForensicMethodEs },
+    { meta: phantomEs, Component: PhantomEs },
+  ],
+};
 
-export function getPost(slug: string): Post | undefined {
-  return posts.find((p) => p.meta.slug === slug);
+/** English dataset — canonical for the machine-readable layer. */
+export const posts = byLang.en;
+
+export function getPosts(lang: Lang): Post[] {
+  return byLang[lang];
+}
+
+export function getPost(lang: Lang, slug: string): Post | undefined {
+  return byLang[lang].find((p) => p.meta.slug === slug);
 }

@@ -11,6 +11,7 @@ export function GET() {
       caseStudies: work.map((w) => ({
         slug: w.slug,
         url: `${SITE.url}/work/${w.slug}`,
+        liveUrl: w.url ?? null,
         name: w.name,
         tagline: w.tagline,
         period: w.period,
