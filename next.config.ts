@@ -33,6 +33,13 @@ const nextConfig: NextConfig = {
     return [
       { source: "/", destination: "/en" },
       {
+        // RSC payloads: on Vercel, client navigations request `<path>.rsc`,
+        // which the dot-exclusion below would otherwise skip (-> 404, breaking
+        // SPA navigation and view transitions in production).
+        source: "/:path((?!es(?:/|\\.rsc)|api/|_next/|_vercel/).*)\\.rsc",
+        destination: "/en/:path.rsc",
+      },
+      {
         source:
           "/:path((?!es$|es/|api/|_next/|_vercel/|opengraph-image|llms\\.txt|.*\\..*).*)",
         destination: "/en/:path",
