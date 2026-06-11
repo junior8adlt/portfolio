@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ViewTransition } from "react";
+import { Analytics } from "@vercel/analytics/next";
 import { notFound } from "next/navigation";
 import { IBM_Plex_Mono, Newsreader } from "next/font/google";
 import { Header } from "@/components/header";
@@ -115,6 +116,7 @@ export default async function RootLayout({
           </ViewTransition>
         </main>
         <Footer lang={lang} />
+        <Analytics />
       </body>
     </html>
   );
