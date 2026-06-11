@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
       },
       { source: "/", destination: "/en" },
       {
+        // Root segment prefetches (Next-Router-Segment-Prefetch header) resolve to
+        // /index.segments/<seg>.segment.rsc; the real files live under /en.segments/.
+        source: "/index.segments/:seg*",
+        destination: "/en.segments/:seg*",
+      },
+      {
         // RSC payloads: on Vercel, client navigations request `<path>.rsc`,
         // which the dot-exclusion below would otherwise skip (-> 404, breaking
         // SPA navigation and view transitions in production).
