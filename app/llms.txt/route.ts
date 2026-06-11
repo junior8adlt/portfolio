@@ -1,6 +1,7 @@
 import { SITE } from "@/lib/site";
 import { work } from "@/content/work";
 import { lab } from "@/content/lab";
+import { posts } from "@/content/blog";
 
 export const dynamic = "force-static";
 
@@ -19,6 +20,9 @@ servers and AI tooling professionally.
 - Location: ${SITE.location}
 - Contact: ${SITE.email}
 - Structured CV (JSON Resume schema): ${SITE.url}/api/cv
+- Full case studies (JSON): ${SITE.url}/api/work
+- CV as PDF: ${SITE.url}/cv.pdf
+- MCP server: \`npx -y alberto-mcp\` (tools: get_profile, list_case_studies, get_case_study, search_experience, get_contact)
 
 ## Case studies
 
@@ -28,11 +32,16 @@ ${work.map((w) => `- [${w.name}](${SITE.url}/work/${w.slug}): ${w.tagline}. Key 
 
 ${lab.map((entry) => `- ${entry.name}: ${entry.tagline}.`).join("\n")}
 
+## Field notes (blog)
+
+${posts.map((p) => `- [${p.meta.title}](${SITE.url}/blog/${p.meta.slug}): ${p.meta.summary}`).join("\n")}
+
 ## Pages
 
 - [Home](${SITE.url}/)
 - [Work](${SITE.url}/work)
 - [Lab](${SITE.url}/lab)
+- [Blog](${SITE.url}/blog)
 - [About + full timeline](${SITE.url}/about)
 `;
 

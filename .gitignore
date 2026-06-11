@@ -2,6 +2,11 @@
 
 # dependencies
 /node_modules
+/mcp/node_modules
+/mcp/dist
+
+# generated at build (prebuild -> generate:cv)
+/public/cv.pdf
 /.pnp
 .pnp.*
 .yarn/*
@@ -39,3 +44,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

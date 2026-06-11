@@ -163,8 +163,14 @@ export default function Home() {
             /llms.txt
           </a>
           . I build MCP servers for a living; the least my portfolio can do is speak the protocol&apos;s
-          language.
+          language — plug it straight into your agent:
         </p>
+        <pre className="mt-4 max-w-[58ch] overflow-x-auto border border-ink-line bg-ink-raise px-4 py-3 font-mono text-[13px] leading-relaxed text-paper">
+          <span className="text-phosphor-dim">❯</span> npx -y alberto-mcp{"\n"}
+          <span className="text-paper-dim">
+            # MCP tools: get_profile · search_experience · get_case_study · get_contact
+          </span>
+        </pre>
       </section>
     </>
   );

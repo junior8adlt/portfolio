@@ -94,6 +94,14 @@ export default function AboutPage() {
           >
             linkedin ↗
           </a>
+          <a
+            href="/cv.pdf"
+            target="_blank"
+            rel="noopener"
+            className="border border-ink-line px-5 py-2.5 font-mono text-sm text-paper-dim transition-colors duration-150 hover:border-phosphor-dim hover:text-phosphor"
+          >
+            cv.pdf ↓
+          </a>
         </div>
       </section>
     </div>

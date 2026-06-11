@@ -6,6 +6,7 @@ import { Scramble } from "./scramble";
 const nav = [
   { href: "/work", label: "work" },
   { href: "/lab", label: "lab" },
+  { href: "/blog", label: "blog" },
   { href: "/about", label: "about" },
 ];
 

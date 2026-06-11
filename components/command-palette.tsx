@@ -24,6 +24,8 @@ export function CommandPalette() {
       { id: "work", label: "go: work — case files", hint: "/work", action: () => router.push("/work") },
       { id: "lab", label: "go: lab — experiments", hint: "/lab", action: () => router.push("/lab") },
       { id: "about", label: "go: about — profile + timeline", hint: "/about", action: () => router.push("/about") },
+      { id: "blog", label: "go: blog — field notes", hint: "/blog", action: () => router.push("/blog") },
+      { id: "cvpdf", label: "download: cv.pdf", hint: "/cv.pdf", action: () => window.open("/cv.pdf", "_blank", "noopener") },
       { id: "email", label: "contact: email", hint: SITE.email, action: () => { window.location.href = `mailto:${SITE.email}`; } },
       { id: "linkedin", label: "open: linkedin", hint: "external", action: () => window.open(SITE.linkedin, "_blank", "noopener") },
       { id: "github", label: "open: github", hint: "external", action: () => window.open(SITE.github, "_blank", "noopener") },
