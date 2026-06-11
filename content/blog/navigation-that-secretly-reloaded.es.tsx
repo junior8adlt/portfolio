@@ -116,21 +116,39 @@ curl /index.rsc    -> 200`}
         público.
       </P>
 
-      <H2>epílogo: el fantasma</H2>
+      <H2>epílogo: el fantasma volvió dos veces</H2>
       <P>
         Horas después del fix, los 404 reaparecieron — solo en <Code>/</Code>, solo navegando en
-        inglés, y solo desde una región geográfica. Dos hallazgos más cerraron el caso. Primero:
-        el CDN de Vercel excluye el cache-buster <Code>_rsc</Code> de su cache key y cachea por
-        región, así que un edge seguía sirviendo los 404 pre-fix que otro edge ya había
-        desechado. Segundo: la raíz es especial — Vercel normaliza su path de payload de vuelta
-        a <Code>/</Code> <em>antes</em> de que corran los rewrites del usuario, así que la regla
+        inglés. Dos hallazgos explicaron el primer regreso. El CDN de Vercel excluye el
+        cache-buster <Code>_rsc</Code> de su cache key y varía por headers RSC, así que entradas
+        envenenadas pre-fix se seguían sirviendo para combinaciones de headers que mis sondas no
+        habían tocado. Y la raíz es especial: Vercel normaliza su path de payload de vuelta a{" "}
+        <Code>/</Code> <em>antes</em> de que corran los rewrites del usuario, así que la regla
         del sufijo nunca lo vio, y las peticiones RSC del home recibían un HTML educado, bien
-        formado y completamente equivocado. La regla final rutea la raíz por el propio header{" "}
-        <Code>RSC</Code>, directo al archivo de flight data. Verificado por content-type, no por
-        status code — este bug grabó esa lección dos veces.
+        formado y completamente equivocado. Una segunda regla ruteó la raíz por el propio header{" "}
+        <Code>RSC</Code>, directo al archivo de flight data.
+      </P>
+      <P>
+        Y entonces volvió otra vez — en el navegador. Todos los curls que pude componer decían
+        200; la consola seguía diciendo 404. El problema era el instrumento: Next.js 16 también
+        prefetchea <em>segmentos</em> individuales, marcados con un header{" "}
+        <Code>Next-Router-Segment-Prefetch</Code> que solo un navegador real envía, y Vercel los
+        resuelve como archivos <Code>/index.segments/*</Code> para la raíz — un tercer lugar
+        donde la raíz es especial. La captura que lo destrabó fue un Chromium headless
+        programado para registrar los request headers completos de todo lo que fallara; una
+        corrida sacó a la luz lo que veinte curls no pudieron. Una tercera regla mapeó los
+        archivos de segmentos, y la consola por fin se quedó en silencio.
       </P>
 
       <H2>lecciones</H2>
+      <UL>
+        <LI>
+          <strong>curl no es un navegador.</strong> Los frameworks hablan consigo mismos con
+          headers que tus peticiones hechas a mano no saben que existen. Cuando curl dice 200 y
+          la consola dice 404, deja de refinar el curl — programa un navegador real y lee los
+          headers de la petición que falla.
+        </LI>
+      </UL>
       <UL>
         <LI>
           <strong>«Funciona» no es un health check.</strong> La degradación elegante es un regalo

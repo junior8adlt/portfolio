@@ -112,21 +112,37 @@ curl /index.rsc    -> 200`}
         routes untouched, and the morphing titles finally performing for an audience.
       </P>
 
-      <H2>epilogue: the ghost</H2>
+      <H2>epilogue: the ghost came back twice</H2>
       <P>
         Hours after the fix, the 404s reappeared — only on <Code>/</Code>, only when browsing in
-        English, and only from one geographic region. Two more findings closed the case. First:
-        Vercel&apos;s CDN excludes the <Code>_rsc</Code> cache-buster from its cache key and
-        caches per region, so one edge kept serving pre-fix 404s that another edge had already
-        evicted. Second: the root is special — Vercel normalizes its payload path back to{" "}
-        <Code>/</Code> <em>before</em> user rewrites run, so the suffix rule never saw it, and
-        RSC requests for the homepage received polite, well-formed, completely wrong HTML. The
-        final rule routes the root by the <Code>RSC</Code> request header itself, straight to
-        the flight file. Verified by content-type, not by status code — this bug burned that
-        lesson in twice.
+        English. Two findings explained the first return. Vercel&apos;s CDN excludes the{" "}
+        <Code>_rsc</Code> cache-buster from its cache key and varies on RSC headers, so poisoned
+        pre-fix entries kept being served for header combinations my probes hadn&apos;t touched.
+        And the root is special: Vercel normalizes its payload path back to <Code>/</Code>{" "}
+        <em>before</em> user rewrites run, so the suffix rule never saw it, and RSC requests for
+        the homepage received polite, well-formed, completely wrong HTML. A second rule routed
+        the root by the <Code>RSC</Code> request header itself, straight to the flight file.
+      </P>
+      <P>
+        Then it came back again — in the browser. Every curl I could compose said 200; the
+        console kept saying 404. The instrument was the problem: Next.js 16 also prefetches
+        individual <em>segments</em>, tagged with a <Code>Next-Router-Segment-Prefetch</Code>{" "}
+        header that only a real browser sends, and Vercel resolves those as{" "}
+        <Code>/index.segments/*</Code> files for the root — a third place where the root is
+        special. The capture that cracked it was a headless Chromium scripted to log the full
+        request headers of anything that failed; one run surfaced what twenty curls could not.
+        A third rule mapped the segment files, and the console finally went quiet.
       </P>
 
       <H2>lessons</H2>
+      <UL>
+        <LI>
+          <strong>curl is not a browser.</strong> Frameworks speak to themselves with headers
+          your hand-built requests don&apos;t know exist. When curl says 200 and the console
+          says 404, stop refining the curl — script a real browser and read the headers of the
+          failing request.
+        </LI>
+      </UL>
       <UL>
         <LI>
           <strong>&quot;It works&quot; is not a health check.</strong> Graceful degradation is a
