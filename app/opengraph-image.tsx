@@ -22,10 +22,10 @@ export default function Image() {
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           <div style={{ display: "flex", color: "#5fae74", fontSize: 26 }}>
-            ❯ opening case_file: alberto_ochoa.log
+            {">"} opening case_file: alberto_ochoa.log
           </div>
           <div style={{ display: "flex", color: "#5fae74", fontSize: 26 }}>
-            ❯ specialty: legacy_modernization + ai_tooling
+            {">"} specialty: legacy_modernization + ai_tooling
             <span style={{ color: "#46f06e", marginLeft: 12 }}>[OK]</span>
           </div>
         </div>
