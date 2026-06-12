@@ -147,6 +147,32 @@ export const workEn: CaseStudy[] = [
         caption: "PWA installed on the clinic tablet; offline-tolerant, touch-first interactions",
       },
     ],
+    visuals: [
+      {
+        src: "/exhibits/viridental-dashboard.webp",
+        title: "viridental — today, chairside",
+        caption:
+          "The doctor's day on one screen: today's agenda, collected vs. outstanding, and receivables past 30 days.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/viridental-perio.webp",
+        title: "viridental — periodontal chart",
+        caption:
+          "Per-site capture with auto-advance following the real probing path; AAP/EFP stage and grade derived from findings, then signed.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/viridental-odonto.webp",
+        title: "viridental — odontogram",
+        caption:
+          "Conditions and treatments recorded directly on teeth, with the clinical legend and a per-surface treatment plan.",
+        width: 2880,
+        height: 1800,
+      },
+    ],
     diagnosis:
       "Clinical software fails when it digitizes forms instead of clinical reasoning. The periodontal classification is a decision procedure (bone loss, tooth loss, complexity factors → stage; progression rate, risk factors → grade), so the system should compute it from findings, not ask the dentist to fill in a dropdown.",
     intervention: [

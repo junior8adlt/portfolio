@@ -147,6 +147,32 @@ export const workEs: CaseStudy[] = [
         caption: "PWA instalada en la tablet del consultorio; tolerante a offline, interacciones touch-first",
       },
     ],
+    visuals: [
+      {
+        src: "/exhibits/viridental-dashboard.webp",
+        title: "viridental — hoy, junto al sillón",
+        caption:
+          "El día de la doctora en una pantalla: agenda de hoy, cobrado vs. por cobrar, y cobros vencidos a más de 30 días.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/viridental-perio.webp",
+        title: "viridental — periodontograma",
+        caption:
+          "Captura por sitio con auto-avance siguiendo el recorrido real de sondaje; estadio y grado AAP/EFP derivados de los hallazgos, y firmados.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/viridental-odonto.webp",
+        title: "viridental — odontograma",
+        caption:
+          "Condiciones y tratamientos registrados directo sobre los dientes, con leyenda clínica y plan de tratamiento por superficie.",
+        width: 2880,
+        height: 1800,
+      },
+    ],
     diagnosis:
       "El software clínico fracasa cuando digitaliza formularios en lugar de razonamiento clínico. La clasificación periodontal es un procedimiento de decisión (pérdida ósea, pérdida dental, factores de complejidad → estadio; tasa de progresión, factores de riesgo → grado), así que el sistema debe calcularla desde los hallazgos, no pedirle a la dentista que llene un dropdown.",
     intervention: [

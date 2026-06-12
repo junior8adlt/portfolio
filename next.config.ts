@@ -29,29 +29,38 @@ const nextConfig: NextConfig = {
     ];
   },
   async rewrites() {
+    // The `<path>.rsc` flight-file form only exists in Vercel's build output;
+    // a local `next start` negotiates RSC by header on the page URL itself,
+    // so these rules would 404 locally.
+    const vercelOnlyRscRules = process.env.VERCEL
+      ? [
+          {
+            // Root RSC payload: Vercel normalizes the path back to `/` before user
+            // rewrites run, so route by the RSC header straight to the flight file.
+            source: "/",
+            has: [{ type: "header" as const, key: "rsc" }],
+            destination: "/en.rsc",
+          },
+          {
+            // Root segment prefetches (Next-Router-Segment-Prefetch header) resolve to
+            // /index.segments/<seg>.segment.rsc; the real files live under /en.segments/.
+            source: "/index.segments/:seg*",
+            destination: "/en.segments/:seg*",
+          },
+          {
+            // RSC payloads: on Vercel, client navigations request `<path>.rsc`,
+            // which the dot-exclusion below would otherwise skip (-> 404, breaking
+            // SPA navigation and view transitions in production).
+            source: "/:path((?!es(?:/|\\.rsc)|api/|_next/|_vercel/).*)\\.rsc",
+            destination: "/en/:path.rsc",
+          },
+        ]
+      : [];
+
     // English lives unprefixed (URLs stay stable); Spanish under /es.
     return [
-      {
-        // Root RSC payload: Vercel normalizes the path back to `/` before user
-        // rewrites run, so route by the RSC header straight to the flight file.
-        source: "/",
-        has: [{ type: "header", key: "rsc" }],
-        destination: "/en.rsc",
-      },
+      ...vercelOnlyRscRules,
       { source: "/", destination: "/en" },
-      {
-        // Root segment prefetches (Next-Router-Segment-Prefetch header) resolve to
-        // /index.segments/<seg>.segment.rsc; the real files live under /en.segments/.
-        source: "/index.segments/:seg*",
-        destination: "/en.segments/:seg*",
-      },
-      {
-        // RSC payloads: on Vercel, client navigations request `<path>.rsc`,
-        // which the dot-exclusion below would otherwise skip (-> 404, breaking
-        // SPA navigation and view transitions in production).
-        source: "/:path((?!es(?:/|\\.rsc)|api/|_next/|_vercel/).*)\\.rsc",
-        destination: "/en/:path.rsc",
-      },
       {
         source:
           "/:path((?!es$|es/|api/|_next/|_vercel/|opengraph-image|llms\\.txt|.*\\..*).*)",

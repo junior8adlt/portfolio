@@ -116,7 +116,8 @@ export default async function RootLayout({
           </ViewTransition>
         </main>
         <Footer lang={lang} />
-        <Analytics />
+        {/* the insights endpoint only exists on Vercel deployments */}
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   );
