@@ -6,6 +6,8 @@ import PhantomEn, { meta as phantomEn } from "./phantom-build-failure.en";
 import PhantomEs, { meta as phantomEs } from "./phantom-build-failure.es";
 import RscEn, { meta as rscEn } from "./navigation-that-secretly-reloaded.en";
 import RscEs, { meta as rscEs } from "./navigation-that-secretly-reloaded.es";
+import ZombieEn, { meta as zombieEn } from "./zombie-on-port-3000.en";
+import ZombieEs, { meta as zombieEs } from "./zombie-on-port-3000.es";
 
 export interface PostMeta {
   slug: string;
@@ -24,11 +26,13 @@ export interface Post {
 /** newest first; slugs are shared across languages so hreflang alternates line up */
 const byLang: Record<Lang, Post[]> = {
   en: [
+    { meta: zombieEn, Component: ZombieEn },
     { meta: rscEn, Component: RscEn },
     { meta: forensicEn, Component: ForensicMethodEn },
     { meta: phantomEn, Component: PhantomEn },
   ],
   es: [
+    { meta: zombieEs, Component: ZombieEs },
     { meta: rscEs, Component: RscEs },
     { meta: forensicEs, Component: ForensicMethodEs },
     { meta: phantomEs, Component: PhantomEs },
