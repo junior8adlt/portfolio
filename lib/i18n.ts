@@ -84,6 +84,8 @@ interface Dict {
     nextFile: string;
     stack: string;
     visit: string;
+    visualEvidence: string;
+    redacted: string;
     metaTitle: string;
     metaDescription: string;
   };
@@ -177,6 +179,8 @@ const en: Dict = {
     nextFile: "next file",
     stack: "stack",
     visit: "visit site ↗",
+    visualEvidence: "visual evidence",
+    redacted: "redacted — nda",
     metaTitle: "Work — case files",
     metaDescription:
       "Forensic case studies: enterprise CRM modernization, a real-money betting platform, clinical software, and D2C ecommerce.",
@@ -284,6 +288,8 @@ const es: Dict = {
     nextFile: "siguiente expediente",
     stack: "stack",
     visit: "visitar sitio ↗",
+    visualEvidence: "evidencia visual",
+    redacted: "reservado — nda",
     metaTitle: "Casos — expedientes",
     metaDescription:
       "Case studies forenses: modernización de CRM enterprise, una plataforma de apuestas con dinero real, software clínico y ecommerce D2C.",

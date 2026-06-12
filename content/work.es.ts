@@ -30,6 +30,17 @@ export const workEs: CaseStudy[] = [
           "capas de auth redundantes y payloads en base64 acumulados tras años de servicios parchados",
       },
     ],
+    visuals: [
+      {
+        src: "/exhibits/crm-redacted",
+        title: "~/crm — pantallas de producción",
+        caption:
+          "Pantallas del cliente reservadas bajo NDA. El trabajo se ve en los números; los screenshots se quedan en casa.",
+        width: 2880,
+        height: 1800,
+        redacted: true,
+      },
+    ],
     diagnosis:
       "El riesgo nunca fue el stack nuevo: fue el drift silencioso de comportamiento. Los stored procedures legacy codificaban reglas de negocio que nadie podía enumerar. Cada módulo migrado necesitaba que su comportamiento legacy fuera reverse-engineered, caracterizado y probado como equivalente antes de poder retirar la versión WinForms.",
     intervention: [
@@ -77,6 +88,23 @@ export const workEs: CaseStudy[] = [
         metric: "spike: 200 VUs",
         caption:
           "pruebas de carga con k6 sobre datos con forma de producción encontraron el techo de CPU en el hashing de contraseñas (argon2), no en el ledger",
+      },
+    ],
+    visuals: [
+      {
+        src: "/exhibits/el-carril-home.webp",
+        title: "elcarrilmx.com — cartelera del día, libro abierto",
+        caption:
+          "La cartelera en vivo: apuestas entre apostadores, sin banca contraria — cada postura publicada viene de otro apostador.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/el-carril-mobile.webp",
+        title: "elcarrilmx.com — móvil",
+        caption: "El mismo libro, a la medida del rancho: la mayoría sigue las carreras desde el teléfono.",
+        width: 780,
+        height: 1688,
       },
     ],
     diagnosis:
@@ -155,6 +183,23 @@ export const workEs: CaseStudy[] = [
           "las clases de bugs que los unit tests no pueden atrapar — la razón por la que cada módulo sale con E2E multi-dispositivo",
       },
     ],
+    visuals: [
+      {
+        src: "/exhibits/mikeas-home.webp",
+        title: "mikeasmovement.com — storefront",
+        caption: "El storefront carga la marca: ropa minimalista, lienzo minimalista.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/mikeas-mobile.webp",
+        title: "mikeasmovement.com — móvil",
+        caption:
+          "El viewport que realmente vende: diseñado primero a ancho de teléfono, donde vive la mayoría del tráfico.",
+        width: 780,
+        height: 1688,
+      },
+    ],
     diagnosis:
       "La calidad en ecommerce es una propiedad de integración: un checkout que pasa unit tests puede seguir perdiendo carritos por una cookie mal configurada en Safari de iOS. La disciplina que importa es probar el flujo completo en los dispositivos que los clientes realmente usan, antes de que algo llegue a producción.",
     intervention: [
@@ -196,6 +241,23 @@ export const workEs: CaseStudy[] = [
         metric: "tres ciclos de compra",
         caption:
           "un curso, un asiento de webinar y una playera se venden, reembolsan y contabilizan distinto — pero el negocio necesita un solo registro de órdenes",
+      },
+    ],
+    visuals: [
+      {
+        src: "/exhibits/be-all-home.webp",
+        title: "beallfam.com — landing",
+        caption:
+          "Una sola tienda para tres verticales: cursos, webinars y productos detrás de un mismo checkout.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/be-all-mobile.webp",
+        title: "beallfam.com — móvil",
+        caption: "El mismo catálogo en el dispositivo donde la audiencia realmente se inscribe.",
+        width: 780,
+        height: 1688,
       },
     ],
     diagnosis:

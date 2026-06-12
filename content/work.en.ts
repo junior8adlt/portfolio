@@ -30,6 +30,17 @@ export const workEn: CaseStudy[] = [
           "redundant auth layers and base64-encoded payloads accumulated across years of patchwork services",
       },
     ],
+    visuals: [
+      {
+        src: "/exhibits/crm-redacted",
+        title: "~/crm — production screens",
+        caption:
+          "Client screens withheld under NDA. The work shows in the numbers; the screenshots stay home.",
+        width: 2880,
+        height: 1800,
+        redacted: true,
+      },
+    ],
     diagnosis:
       "The risk was never the new stack: it was silent behavioral drift. Legacy stored procedures encoded business rules nobody could enumerate. Every migrated module needed its legacy behavior reverse-engineered, characterized, and proven equivalent before the WinForms version could be retired.",
     intervention: [
@@ -77,6 +88,23 @@ export const workEn: CaseStudy[] = [
         metric: "spike: 200 VUs",
         caption:
           "k6 load tests against production-shaped data found the CPU ceiling at password hashing (argon2), not the ledger",
+      },
+    ],
+    visuals: [
+      {
+        src: "/exhibits/el-carril-home.webp",
+        title: "elcarrilmx.com — today's card, open book",
+        caption:
+          "The live racing card: peer-to-peer stakes, no house counterparty — every posted bet comes from another bettor.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/el-carril-mobile.webp",
+        title: "elcarrilmx.com — mobile",
+        caption: "Same book, ranch-friendly: most bettors follow the races from a phone.",
+        width: 780,
+        height: 1688,
       },
     ],
     diagnosis:
@@ -155,6 +183,23 @@ export const workEn: CaseStudy[] = [
           "the bug classes that unit tests cannot catch — the reason every module ships with cross-device E2E",
       },
     ],
+    visuals: [
+      {
+        src: "/exhibits/mikeas-home.webp",
+        title: "mikeasmovement.com — storefront",
+        caption: "The storefront carries the brand: minimalist apparel, minimalist canvas.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/mikeas-mobile.webp",
+        title: "mikeasmovement.com — mobile",
+        caption:
+          "The viewport that actually sells: designed at phone width first, where most of the traffic lives.",
+        width: 780,
+        height: 1688,
+      },
+    ],
     diagnosis:
       "Ecommerce quality is an integration property: a checkout that passes unit tests can still lose carts to a cookie misconfiguration on iOS Safari. The discipline that matters is full-flow testing on the devices customers actually use, run before anything reaches production.",
     intervention: [
@@ -196,6 +241,23 @@ export const workEn: CaseStudy[] = [
         metric: "three purchase lifecycles",
         caption:
           "a course, a webinar seat and a t-shirt sell, refund and account differently — but the business needs one ledger of orders",
+      },
+    ],
+    visuals: [
+      {
+        src: "/exhibits/be-all-home.webp",
+        title: "beallfam.com — landing",
+        caption:
+          "One storefront for three verticals: courses, webinars and products behind a single checkout.",
+        width: 2880,
+        height: 1800,
+      },
+      {
+        src: "/exhibits/be-all-mobile.webp",
+        title: "beallfam.com — mobile",
+        caption: "The same catalog on the device where the audience actually enrolls.",
+        width: 780,
+        height: 1688,
       },
     ],
     diagnosis:

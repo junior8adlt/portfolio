@@ -14,6 +14,18 @@ export interface Exhibit {
   caption: string;
 }
 
+export interface Visual {
+  /** /public path, e.g. /exhibits/el-carril-home.webp */
+  src: string;
+  /** terminal window title, e.g. elcarrilmx.com — cartelera */
+  title: string;
+  caption: string;
+  width: number;
+  height: number;
+  /** render an NDA placeholder instead of an image */
+  redacted?: boolean;
+}
+
 export interface CaseStudy {
   slug: string;
   index: string; // "001"
@@ -27,6 +39,7 @@ export interface CaseStudy {
   /** forensic sections */
   situation: string;
   evidence: Exhibit[];
+  visuals?: Visual[];
   diagnosis: string;
   intervention: string[];
   outcome: Exhibit[];

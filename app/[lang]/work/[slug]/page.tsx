@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { SectionRule } from "@/components/section-rule";
 import { Stamp } from "@/components/stamp";
 import { ExhibitList } from "@/components/exhibit";
+import { ExhibitImage } from "@/components/exhibit-image";
 import { Annotation } from "@/components/annotation";
 import { getWork, getCaseStudy } from "@/content/work";
 import { href, isLang, langAlternates, LANGS, t, type Lang } from "@/lib/i18n";
@@ -102,6 +103,26 @@ export default async function CaseStudyPage({
           <ExhibitList items={cs.evidence} />
         </div>
       </section>
+
+      {/* visual evidence */}
+      {cs.visuals && cs.visuals.length > 0 && (
+        <section className="mt-16" aria-labelledby="visual-evidence">
+          <SectionRule label={ui.work.visualEvidence} />
+          <h2 id="visual-evidence" className="sr-only">
+            {ui.work.visualEvidence}
+          </h2>
+          <div className="mt-6 flex flex-wrap items-start gap-8">
+            {cs.visuals.map((v, i) => (
+              <ExhibitImage
+                key={v.src}
+                visual={v}
+                letter={String.fromCharCode(65 + i)}
+                redactedLabel={ui.work.redacted}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* diagnosis */}
       <section className="mt-16" aria-labelledby="diagnosis">
